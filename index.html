@@ -35,17 +35,17 @@
             font-family: 'Heebo', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
-        /* Default Dark Theme (המראה המקורי בדיוק) */
+        /* Default Dark Theme - ניגודיות גבוהה במיוחד לקריאה נוחה */
         body {
-            background-color: #0F172A;
-            color: #F8FAFC;
+            background-color: #0B1120;
+            color: #FFFFFF;
         }
         .glass-card {
             backdrop-filter: blur(12px);
         }
         .dark .glass-card {
-            background: rgba(30, 41, 59, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #1E293B;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
         /* Light Theme Style */
         body:not(.dark) {
@@ -53,19 +53,16 @@
             color: #0F172A;
         }
         body:not(.dark) .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.1);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
         ::-webkit-scrollbar {
             width: 4px;
             height: 4px;
         }
-        ::-webkit-scrollbar-track {
-            background: inherit;
-        }
         ::-webkit-scrollbar-thumb {
-            background: #334155;
+            background: #475569;
             border-radius: 4px;
         }
     </style>
@@ -79,12 +76,12 @@
                 <i class="fa-solid fa-snowflake text-white"></i>
             </div>
             <div>
-                <h1 class="font-bold text-base text-slate-100 leading-tight">מה במקרר</h1>
-                <p class="text-[11px] text-sky-400 font-medium">ניהול משפחתי חכם</p>
+                <h1 class="font-bold text-base text-white leading-tight">מה במקרר</h1>
+                <p class="text-[11px] text-sky-400 font-bold">ניהול משפחתי חכם</p>
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center shadow-sm hover:opacity-85 transition" title="החלף ערכת נושא">
+            <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-slate-800 text-white flex items-center justify-center shadow-sm hover:bg-slate-700 transition" title="החלף ערכת נושא">
                 <i id="themeIcon" class="fa-solid fa-moon text-xs"></i>
             </button>
             <button onclick="openAiChefModal()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-md hover:opacity-95 transition">
@@ -99,12 +96,12 @@
         <!-- TAB 1: FRIDGE & FREEZER -->
         <section id="tab-fridge" class="tab-content space-y-4">
             <!-- Filter & Quick Actions Bar -->
-            <div class="flex items-center justify-between gap-2 bg-slate-900/80 p-2 rounded-2xl border border-slate-800 shadow-sm">
+            <div class="flex items-center justify-between gap-2 bg-slate-900 p-2 rounded-2xl border border-slate-800 shadow-sm">
                 <div class="flex gap-1 overflow-x-auto py-1 px-1">
-                    <button onclick="setFilter('all')" id="filter-all" class="text-xs px-3 py-1.5 rounded-xl bg-sky-500 text-white font-medium transition">הכל</button>
-                    <button onclick="setFilter('meat')" id="filter-meat" class="text-xs px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 transition">בשר</button>
-                    <button onclick="setFilter('dairy')" id="filter-dairy" class="text-xs px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 transition">חלב</button>
-                    <button onclick="setFilter('parve')" id="filter-parve" class="text-xs px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 transition">פרווה</button>
+                    <button onclick="setFilter('all')" id="filter-all" class="text-xs px-3 py-1.5 rounded-xl bg-sky-500 text-slate-950 font-bold transition">הכל</button>
+                    <button onclick="setFilter('meat')" id="filter-meat" class="text-xs px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 font-semibold transition">בשר</button>
+                    <button onclick="setFilter('dairy')" id="filter-dairy" class="text-xs px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 font-semibold transition">חלב</button>
+                    <button onclick="setFilter('parve')" id="filter-parve" class="text-xs px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 font-semibold transition">פרווה</button>
                 </div>
                 <button onclick="openAddItemModal()" class="bg-emerald-500 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 shrink-0 shadow-lg">
                     <i class="fa-solid fa-plus"></i> הוסף מוצר
@@ -112,12 +109,12 @@
             </div>
 
             <!-- Notice Banner for Expiring Items -->
-            <div id="expiringAlertBanner" class="hidden glass-card p-3 rounded-2xl border-amber-500/30 bg-amber-950/20 flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+            <div id="expiringAlertBanner" class="hidden glass-card p-3 rounded-2xl border-amber-500/40 bg-amber-950/40 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-amber-500/30 text-amber-300 flex items-center justify-center shrink-0">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
-                <div class="flex-1 text-xs text-amber-200">
-                    <span class="font-bold">שים לב:</span> ישנם מוצרים שפג תוקפם קרוב או פג. כדאי להשתמש בהם בהקדם.
+                <div class="flex-1 text-xs text-amber-100 font-medium">
+                    <span class="font-bold text-amber-300">שים לב:</span> ישנם מוצרים שפג תוקפם קרוב או פג. כדאי להשתמש בהם בהקדם.
                 </div>
             </div>
 
@@ -127,7 +124,7 @@
                     <h2 class="text-sm font-bold text-sky-400 flex items-center gap-2">
                         <i class="fa-solid fa-door-open"></i> מדורי הקירור (מקרר)
                     </h2>
-                    <span class="text-[11px] text-slate-400" id="fridgeItemCount">0 מוצרים</span>
+                    <span class="text-[11px] text-slate-300 font-medium" id="fridgeItemCount">0 מוצרים</span>
                 </div>
                 <div id="fridgeShelvesContainer" class="space-y-3"></div>
             </div>
@@ -138,7 +135,7 @@
                     <h2 class="text-sm font-bold text-indigo-400 flex items-center gap-2">
                         <i class="fa-solid fa-snowflake"></i> מדורי ההקפאה (מקפיא)
                     </h2>
-                    <span class="text-[11px] text-slate-400" id="freezerItemCount">0 מוצרים</span>
+                    <span class="text-[11px] text-slate-300 font-medium" id="freezerItemCount">0 מוצרים</span>
                 </div>
                 <div id="freezerShelvesContainer" class="grid grid-cols-1 gap-2.5"></div>
             </div>
@@ -151,9 +148,9 @@
                     <h2 class="text-base font-bold text-emerald-400 flex items-center gap-2">
                         <i class="fa-solid fa-calendar-days"></i> תכנון ארוחות שבועי
                     </h2>
-                    <p class="text-xs text-slate-400">תכנון ארוחות בוקר, צהריים וערב למשפחה</p>
+                    <p class="text-xs text-slate-300">תכנון ארוחות בוקר, צהריים וערב למשפחה</p>
                 </div>
-                <button onclick="clearMealPlan()" class="text-[11px] text-slate-400 hover:text-rose-400 bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-700">אפס שבוע</button>
+                <button onclick="clearMealPlan()" class="text-[11px] text-slate-200 hover:text-rose-400 bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-700 font-medium">אפס שבוע</button>
             </div>
             <div id="weeklyMealsContainer" class="space-y-3"></div>
         </section>
@@ -165,7 +162,7 @@
                     <h2 class="text-base font-bold text-sky-400 flex items-center gap-2">
                         <i class="fa-solid fa-cart-shopping"></i> רשימת קניות
                     </h2>
-                    <p class="text-xs text-slate-400">מוצרים שנגמרו או שצריך להשלים</p>
+                    <p class="text-xs text-slate-300">מוצרים שנגמרו או שצריך להשלים</p>
                 </div>
                 <button onclick="openAddShoppingModal()" class="bg-sky-500 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 shadow-lg">
                     <i class="fa-solid fa-plus"></i> הוסף פריט
@@ -177,13 +174,13 @@
         <!-- TAB 4: SETTINGS & MAPPING -->
         <section id="tab-settings" class="tab-content hidden space-y-4">
             <!-- Google Sheets Sync Settings -->
-            <div class="glass-card p-4 rounded-2xl space-y-3 border border-sky-500/30 bg-sky-950/10">
+            <div class="glass-card p-4 rounded-2xl space-y-3 border border-sky-500/40 bg-sky-950/20">
                 <h2 class="text-sm font-bold text-sky-400 flex items-center gap-2">
                     <i class="fa-solid fa-cloud-arrow-up"></i> הגדרת חיבור ל-Google Sheets
                 </h2>
-                <p class="text-xs text-slate-300">הדבק כאן את כתובת ה-Web App המלאה שקיבלת מ-Google Apps Script (מתחילה ב-https://... ומסתיימת ב-/exec):</p>
+                <p class="text-xs text-slate-200">הדבק כאן את כתובת ה-Web App המלאה שקיבלת מ-Google Apps Script (מתחילה ב-https://... ומסתיימת ב-/exec):</p>
                 <div class="space-y-2">
-                    <input type="text" id="settingsGoogleUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-sky-500">
+                    <input type="text" id="settingsGoogleUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-500">
                     <button onclick="saveGoogleUrlSettings()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs w-full transition">שמור כתובת סנכרון</button>
                 </div>
             </div>
@@ -194,7 +191,7 @@
                     <h2 class="text-sm font-bold text-emerald-400 flex items-center gap-2">
                         <i class="fa-solid fa-users"></i> מיפוי בני המשפחה
                     </h2>
-                    <button onclick="openAddFamilyModal()" class="text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">+ הוסף בן משפחה</button>
+                    <button onclick="openAddFamilyModal()" class="text-xs text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-lg border border-emerald-500/30 font-bold">+ הוסף בן משפחה</button>
                 </div>
                 <div id="familyMembersContainer" class="flex flex-wrap gap-2 pt-1"></div>
             </div>
@@ -204,28 +201,28 @@
                 <h2 class="text-sm font-bold text-sky-400 flex items-center gap-2">
                     <i class="fa-solid fa-sliders"></i> מבנה ומדורי המקרר והמקפיא
                 </h2>
-                <p class="text-xs text-slate-400">ערוך את שמות המדפים והמגירות לפי המבנה הפיזי בביתך:</p>
+                <p class="text-xs text-slate-300">ערוך את שמות המדפים והמגירות לפי המבנה הפיזי בביתך:</p>
                 
                 <div class="space-y-3 pt-2">
                     <div>
-                        <div class="text-xs font-medium text-slate-300 mb-1.5">מדורי קירור (מקרר):</div>
+                        <div class="text-xs font-semibold text-slate-200 mb-1.5">מדורי קירור (מקרר):</div>
                         <div id="fridgeShelvesSettings" class="space-y-2"></div>
-                        <button onclick="addShelf('fridge')" class="mt-2 text-xs text-sky-400 bg-sky-500/10 w-full py-2 rounded-xl border border-sky-500/20">+ הוסף מדף לקירור</button>
+                        <button onclick="addShelf('fridge')" class="mt-2 text-xs text-sky-300 bg-sky-500/20 w-full py-2 rounded-xl border border-sky-500/30 font-bold">+ הוסף מדף לקירור</button>
                     </div>
 
-                    <div class="pt-3 border-t border-slate-800">
-                        <div class="text-xs font-medium text-slate-300 mb-1.5">מדורי הקפאה (מקפיא):</div>
+                    <div class="pt-3 border-t border-slate-700">
+                        <div class="text-xs font-semibold text-slate-200 mb-1.5">מדורי הקפאה (מקפיא):</div>
                         <div id="freezerShelvesSettings" class="space-y-2"></div>
-                        <button onclick="addShelf('freezer')" class="mt-2 text-xs text-indigo-400 bg-indigo-500/10 w-full py-2 rounded-xl border border-indigo-500/20">+ הוסף מגירה למקפיא</button>
+                        <button onclick="addShelf('freezer')" class="mt-2 text-xs text-indigo-300 bg-indigo-500/20 w-full py-2 rounded-xl border border-indigo-500/30 font-bold">+ הוסף מגירה למקפיא</button>
                     </div>
                 </div>
             </div>
 
             <!-- App Info & Reset -->
             <div class="glass-card p-4 rounded-2xl space-y-2 text-center shadow-sm">
-                <div class="text-xs font-bold text-slate-300">אפליקציית מה במקרר גרסה 2.6</div>
-                <p class="text-[11px] text-slate-400">סנכרון מלא באמצעות Google Sheets מעודכן לכל בני המשפחה.</p>
-                <button onclick="resetAllData()" class="text-xs text-rose-400 bg-rose-500/10 px-3 py-2 rounded-xl border border-rose-500/20 w-full mt-2">אפס את כל הנתונים</button>
+                <div class="text-xs font-bold text-white">אפליקציית מה במקרר גרסה 2.7</div>
+                <p class="text-[11px] text-slate-300">סנכרון מלא באמצעות Google Sheets מעודכן לכל בני המשפחה.</p>
+                <button onclick="resetAllData()" class="text-xs text-rose-300 bg-rose-500/20 px-3 py-2 rounded-xl border border-rose-500/30 w-full mt-2 font-bold">אפס את כל הנתונים</button>
             </div>
         </section>
 
@@ -233,47 +230,47 @@
 
     <!-- Bottom Navigation Bar -->
     <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900 border-t border-slate-800 z-50 flex justify-around py-2 px-1 transition-colors">
-        <button onclick="switchTab('fridge')" id="nav-fridge" class="flex flex-col items-center gap-1 text-xs text-sky-400 transition-colors w-1/4">
+        <button onclick="switchTab('fridge')" id="nav-fridge" class="flex flex-col items-center gap-1 text-xs text-sky-400 font-bold transition-colors w-1/4">
             <i class="fa-solid fa-snowflake text-lg"></i>
-            <span class="text-[10px] font-medium">המקרר שלי</span>
+            <span class="text-[10px]">המקרר שלי</span>
         </button>
-        <button onclick="switchTab('meals')" id="nav-meals" class="flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors w-1/4">
+        <button onclick="switchTab('meals')" id="nav-meals" class="flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors w-1/4">
             <i class="fa-solid fa-calendar-days text-lg"></i>
-            <span class="text-[10px] font-medium">תכנון שבועי</span>
+            <span class="text-[10px]">תכנון שבועי</span>
         </button>
-        <button onclick="switchTab('shopping')" id="nav-shopping" class="flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors w-1/4">
+        <button onclick="switchTab('shopping')" id="nav-shopping" class="flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors w-1/4">
             <i class="fa-solid fa-cart-shopping text-lg"></i>
-            <span class="text-[10px] font-medium">קניות</span>
+            <span class="text-[10px]">קניות</span>
         </button>
-        <button onclick="switchTab('settings')" id="nav-settings" class="flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors w-1/4">
+        <button onclick="switchTab('settings')" id="nav-settings" class="flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors w-1/4">
             <i class="fa-solid fa-gear text-lg"></i>
-            <span class="text-[10px] font-medium">הגדרות</span>
+            <span class="text-[10px]">הגדרות</span>
         </button>
     </nav>
 
     <!-- MODAL: ADD / EDIT ITEM -->
     <div id="itemModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-sm rounded-3xl p-5 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 id="modalTitle" class="font-bold text-sm text-slate-100">הוספת מוצר חדש</h3>
-                <button onclick="closeModal('itemModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 id="modalTitle" class="font-bold text-sm text-white">הוספת מוצר חדש</h3>
+                <button onclick="closeModal('itemModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
             <form id="itemForm" onsubmit="saveItem(event)" class="space-y-3">
                 <input type="hidden" id="editItemId">
                 <div>
-                    <label class="text-[11px] text-slate-300 block mb-1">שם המוצר</label>
-                    <input type="text" id="itemName" required placeholder="למשל: גבינה צהובה, עוף טחון" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-sky-500">
+                    <label class="text-[11px] text-slate-200 font-semibold block mb-1">שם המוצר</label>
+                    <input type="text" id="itemName" required placeholder="למשל: גבינה צהובה, עוף טחון" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-500">
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="text-[11px] text-slate-300 block mb-1">מדور (מיקום)</label>
-                        <select id="itemLocation" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none"></select>
+                        <label class="text-[11px] text-slate-200 font-semibold block mb-1">מדور (מיקום)</label>
+                        <select id="itemLocation" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></select>
                     </div>
                     <div>
-                        <label class="text-[11px] text-slate-300 block mb-1">כשרות</label>
-                        <select id="itemKosher" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                        <label class="text-[11px] text-slate-200 font-semibold block mb-1">כשרות</label>
+                        <select id="itemKosher" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
                             <option value="parve">פרווה (ירוק)</option>
                             <option value="dairy">חלב (כחול)</option>
                             <option value="meat">בשר (אדום)</option>
@@ -283,18 +280,18 @@
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="text-[11px] text-slate-300 block mb-1">תאריך תפוגה</label>
-                        <input type="date" id="itemExpiry" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                        <label class="text-[11px] text-slate-200 font-semibold block mb-1">תאריך תפוגה</label>
+                        <input type="date" id="itemExpiry" required class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
                     </div>
                     <div>
-                        <label class="text-[11px] text-slate-300 block mb-1">כמות או יחידות</label>
-                        <input type="text" id="itemQuantity" placeholder="למשל: 2 יחידות" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                        <label class="text-[11px] text-slate-200 font-semibold block mb-1">כמות או יחידות</label>
+                        <input type="text" id="itemQuantity" placeholder="למשל: 2 יחידות" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none">
                     </div>
                 </div>
 
                 <div class="pt-2 flex gap-2">
                     <button type="submit" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition">שמור מוצר</button>
-                    <button type="button" onclick="closeModal('itemModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-xl text-xs transition">ביטול</button>
+                    <button type="button" onclick="closeModal('itemModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl text-xs font-semibold transition">ביטול</button>
                 </div>
             </form>
         </div>
@@ -303,22 +300,22 @@
     <!-- MODAL: ADD SHOPPING ITEM -->
     <div id="shoppingModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-sm rounded-3xl p-5 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-sm text-slate-100">הוספה לרשימת קניות</h3>
-                <button onclick="closeModal('shoppingModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 class="font-bold text-sm text-white">הוספה לרשימת קניות</h3>
+                <button onclick="closeModal('shoppingModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form onsubmit="saveShoppingItem(event)" class="space-y-3">
                 <div>
-                    <label class="text-[11px] text-slate-300 block mb-1">שם המוצר לקנייה</label>
-                    <input type="text" id="shoppingName" required placeholder="למשל: חלב, לחם, עגבניות" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-sky-500">
+                    <label class="text-[11px] text-slate-200 font-semibold block mb-1">שם המוצר לקנייה</label>
+                    <input type="text" id="shoppingName" required placeholder="למשל: חלב, לחם, עגבניות" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-500">
                 </div>
                 <div>
-                    <label class="text-[11px] text-slate-300 block mb-1">כמות או הערה</label>
-                    <input type="text" id="shoppingQty" placeholder="למשל: 2 שקיות" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                    <label class="text-[11px] text-slate-200 font-semibold block mb-1">כמות או הערה</label>
+                    <input type="text" id="shoppingQty" placeholder="למשל: 2 שקיות" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none">
                 </div>
                 <div class="pt-2 flex gap-2">
                     <button type="submit" class="flex-1 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition">הוסף לרשימה</button>
-                    <button type="button" onclick="closeModal('shoppingModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-xl text-xs transition">ביטול</button>
+                    <button type="button" onclick="closeModal('shoppingModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl text-xs font-semibold transition">ביטול</button>
                 </div>
             </form>
         </div>
@@ -327,18 +324,18 @@
     <!-- MODAL: ADD FAMILY MEMBER -->
     <div id="familyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-sm rounded-3xl p-5 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-sm text-slate-100">הוספת בן משפחה</h3>
-                <button onclick="closeModal('familyModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 class="font-bold text-sm text-white">הוספת בן משפחה</h3>
+                <button onclick="closeModal('familyModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form onsubmit="saveFamilyMember(event)" class="space-y-3">
                 <div>
-                    <label class="text-[11px] text-slate-300 block mb-1">שם</label>
-                    <input type="text" id="familyNameInput" required placeholder="למשל: דן, רוני" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                    <label class="text-[11px] text-slate-200 font-semibold block mb-1">שם</label>
+                    <input type="text" id="familyNameInput" required placeholder="למשל: דן, רוני" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none">
                 </div>
                 <div>
-                    <label class="text-[11px] text-slate-300 block mb-1">תפקיד או קשר</label>
-                    <select id="familyRoleInput" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                    <label class="text-[11px] text-slate-200 font-semibold block mb-1">תפקיד או קשר</label>
+                    <select id="familyRoleInput" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
                         <option value="אבא">אבא</option>
                         <option value="אמא">אמא</option>
                         <option value="ילד או ילדה">ילד או ילדה</option>
@@ -347,7 +344,7 @@
                 </div>
                 <div class="pt-2 flex gap-2">
                     <button type="submit" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition">שמור</button>
-                    <button type="button" onclick="closeModal('familyModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-xl text-xs transition">ביטול</button>
+                    <button type="button" onclick="closeModal('familyModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl text-xs font-semibold transition">ביטול</button>
                 </div>
             </form>
         </div>
@@ -356,21 +353,21 @@
     <!-- MODAL: AI CHEF RECIPE SUGGESTIONS -->
     <div id="aiChefModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
                 <h3 class="font-bold text-sm text-amber-400 flex items-center gap-2">
                     <i class="fa-solid fa-hat-chef"></i> שף חכם - רעיונות לבישול
                 </h3>
-                <button onclick="closeModal('aiChefModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="closeModal('aiChefModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
             <div class="space-y-3">
-                <p class="text-xs text-slate-300 leading-relaxed">
+                <p class="text-xs text-slate-200 leading-relaxed">
                     השף החכם סורק את המוצרים במקרר שלך וממליץ על מתכונים מהירים ויצירתיים:
                 </p>
 
                 <div id="aiChefLoading" class="text-center py-8 space-y-2 hidden">
                     <div class="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                    <div class="text-xs text-amber-400">השף מכין הצעות טעימות מהמוצרים שלך...</div>
+                    <div class="text-xs text-amber-400 font-bold">השף מכין הצעות טעימות מהמוצרים שלך...</div>
                 </div>
 
                 <div id="aiChefResults" class="space-y-3"></div>
@@ -533,9 +530,9 @@
                 const btn = document.getElementById(`nav-${t}`);
                 if (btn) {
                     if (t === tabId) {
-                        btn.className = "flex flex-col items-center gap-1 text-xs text-sky-400 transition-colors w-1/4";
+                        btn.className = "flex flex-col items-center gap-1 text-xs text-sky-400 font-bold transition-colors w-1/4";
                     } else {
-                        btn.className = "flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors w-1/4";
+                        btn.className = "flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors w-1/4";
                     }
                 }
             });
@@ -562,10 +559,10 @@
 
         function getKosherBadgeClass(kosher) {
             switch(kosher) {
-                case 'meat': return 'bg-red-500/20 text-red-400 border-red-500/30';
-                case 'dairy': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-                case 'parve': return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
-                default: return 'bg-slate-500/20 text-slate-400 border-slate-500/30';
+                case 'meat': return 'bg-red-500/30 text-red-300 border-red-500/50 font-bold';
+                case 'dairy': return 'bg-blue-500/30 text-blue-300 border-blue-500/50 font-bold';
+                case 'parve': return 'bg-emerald-500/30 text-emerald-300 border-emerald-500/50 font-bold';
+                default: return 'bg-slate-700 text-slate-300 border-slate-600 font-bold';
             }
         }
 
@@ -597,15 +594,15 @@
                     totalFridgeItems += shelfItems.length;
 
                     return `
-                        <div class="glass-card p-3.5 rounded-2xl space-y-2 border border-slate-800 shadow-sm">
-                            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
-                                <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                        <div class="glass-card p-3.5 rounded-2xl space-y-2 border border-slate-700 shadow-sm">
+                            <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                                <span class="text-xs font-bold text-white flex items-center gap-1.5">
                                     <i class="fa-solid fa-layer-group text-sky-400"></i> ${shelf.name}
                                 </span>
-                                <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">${shelfItems.length} מוצרים</span>
+                                <span class="text-[10px] bg-slate-800 text-slate-200 px-2.5 py-0.5 rounded-full font-semibold">${shelfItems.length} מוצרים</span>
                             </div>
                             <div class="grid grid-cols-2 gap-2">
-                                ${shelfItems.length > 0 ? shelfItems.map(item => renderItemCard(item)).join('') : '<div class="col-span-2 text-center text-[11px] text-slate-500 py-3">המדף ריק כרגע</div>'}
+                                ${shelfItems.length > 0 ? shelfItems.map(item => renderItemCard(item)).join('') : '<div class="col-span-2 text-center text-[11px] text-slate-400 py-3 font-medium">המדף ריק כרגע</div>'}
                             </div>
                         </div>
                     `;
@@ -623,15 +620,15 @@
                     totalFreezerItems += shelfItems.length;
 
                     return `
-                        <div class="glass-card p-3 rounded-xl flex flex-col gap-2 border border-slate-800 shadow-sm">
+                        <div class="glass-card p-3 rounded-xl flex flex-col gap-2 border border-slate-700 shadow-sm">
                             <div class="flex justify-between items-center">
-                                <span class="text-xs font-medium text-indigo-300 flex items-center gap-1.5">
+                                <span class="text-xs font-bold text-white flex items-center gap-1.5">
                                     <i class="fa-solid fa-box-archive text-indigo-400"></i> ${shelf.name}
                                 </span>
-                                <span class="text-[10px] text-slate-400">${shelfItems.length} מוצרים</span>
+                                <span class="text-[10px] text-slate-300 font-semibold">${shelfItems.length} מוצרים</span>
                             </div>
                             <div class="grid grid-cols-2 gap-2">
-                                ${shelfItems.length > 0 ? shelfItems.map(item => renderItemCard(item)).join('') : '<div class="col-span-2 text-center text-[11px] text-slate-500 py-2">מגירה ריקה</div>'}
+                                ${shelfItems.length > 0 ? shelfItems.map(item => renderItemCard(item)).join('') : '<div class="col-span-2 text-center text-[11px] text-slate-400 py-2 font-medium">מגירה ריקה</div>'}
                             </div>
                         </div>
                     `;
@@ -656,16 +653,16 @@
         function renderItemCard(item) {
             const status = getExpiryStatus(item.expiry);
             let statusBadge = '';
-            let borderClass = 'border-slate-700/60 bg-slate-800/80';
+            let borderClass = 'border-slate-700 bg-slate-800/90';
             
             if (status === 'expired') {
-                statusBadge = `<span class="bg-rose-500 text-slate-950 font-bold text-[9px] px-1.5 py-0.5 rounded animate-pulse">פג תוקף!</span>`;
-                borderClass = 'border-rose-500 shadow-lg shadow-rose-500/10 bg-rose-950/20';
+                statusBadge = `<span class="bg-rose-500 text-slate-950 font-black text-[9px] px-1.5 py-0.5 rounded animate-pulse">פג תוקף!</span>`;
+                borderClass = 'border-rose-500 shadow-lg shadow-rose-500/10 bg-rose-950/40';
             } else if (status === 'warning') {
                 statusBadge = `<span class="bg-amber-500 text-slate-950 font-bold text-[9px] px-1.5 py-0.5 rounded">קרוב לתפוגה</span>`;
-                borderClass = 'border-amber-500/80 shadow-md shadow-amber-500/10 bg-amber-950/10';
+                borderClass = 'border-amber-500/80 shadow-md shadow-amber-500/10 bg-amber-950/30';
             } else {
-                statusBadge = `<span class="bg-emerald-500/20 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded">תקין</span>`;
+                statusBadge = `<span class="bg-emerald-500/20 text-emerald-300 font-bold text-[9px] px-1.5 py-0.5 rounded">תקין</span>`;
             }
 
             const kosherBadgeClass = getKosherBadgeClass(item.kosher);
@@ -675,18 +672,18 @@
                 <div class="${borderClass} p-2.5 rounded-xl border flex flex-col justify-between gap-2 relative shadow-sm">
                     <div class="flex items-start justify-between gap-1">
                         <div>
-                            <div class="text-xs font-bold text-slate-100 leading-snug">${item.name}</div>
-                            <div class="text-[10px] text-slate-400 mt-0.5">${item.quantity || 'כמות רגילה'}</div>
+                            <div class="text-xs font-bold text-white leading-snug">${item.name}</div>
+                            <div class="text-[10px] text-slate-300 font-medium mt-0.5">${item.quantity || 'כמות רגילה'}</div>
                         </div>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full border ${kosherBadgeClass} font-medium shrink-0">${kosherName}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full border ${kosherBadgeClass} shrink-0">${kosherName}</span>
                     </div>
 
-                    <div class="flex items-center justify-between pt-1 border-t border-slate-700/50 text-[10px]">
-                        <span class="text-slate-300">תוקף: ${item.expiry}</span>
+                    <div class="flex items-center justify-between pt-1 border-t border-slate-700 text-[10px]">
+                        <span class="text-slate-300 font-medium">תוקף: ${item.expiry}</span>
                         ${statusBadge}
                     </div>
 
-                    <div class="absolute top-1 left-1 opacity-0 hover:opacity-100 transition flex gap-1 bg-slate-900/90 p-1 rounded-lg shadow-sm">
+                    <div class="absolute top-1 left-1 opacity-0 hover:opacity-100 transition flex gap-1 bg-slate-900/95 p-1 rounded-lg shadow-sm border border-slate-700">
                         <button onclick="editItem('${item.id}')" class="text-sky-400 p-1 hover:text-sky-300"><i class="fa-solid fa-pen text-[10px]"></i></button>
                         <button onclick="deleteItem('${item.id}')" class="text-rose-400 p-1 hover:text-rose-300"><i class="fa-solid fa-trash text-[10px]"></i></button>
                     </div>
@@ -700,9 +697,9 @@
                 const btn = document.getElementById(`filter-${f}`);
                 if (btn) {
                     if (f === filterType) {
-                        btn.className = "text-xs px-3 py-1.5 rounded-xl bg-sky-500 text-white font-medium transition";
+                        btn.className = "text-xs px-3 py-1.5 rounded-xl bg-sky-500 text-slate-950 font-bold transition";
                     } else {
-                        btn.className = "text-xs px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 transition";
+                        btn.className = "text-xs px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 font-semibold transition";
                     }
                 }
             });
@@ -787,24 +784,24 @@
                 container.innerHTML = defaultDays.map(day => {
                     const dayPlan = appData.meals[day] || { breakfast: '', lunch: '', dinner: '' };
                     return `
-                        <div class="glass-card p-3.5 rounded-2xl space-y-2 border border-slate-800 shadow-sm">
-                            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <div class="glass-card p-3.5 rounded-2xl space-y-2 border border-slate-700 shadow-sm">
+                            <div class="flex justify-between items-center border-b border-slate-700 pb-2">
                                 <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
                                     <i class="fa-solid fa-calendar-day"></i> יום ${day}
                                 </span>
                             </div>
                             <div class="grid grid-cols-3 gap-2 text-xs">
                                 <div class="space-y-1">
-                                    <span class="text-[10px] text-slate-400 block font-medium">בוקר</span>
-                                    <input type="text" value="${dayPlan.breakfast}" onchange="updateMeal('${day}', 'breakfast', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-slate-100 focus:outline-none">
+                                    <span class="text-[10px] text-slate-300 font-semibold block">בוקר</span>
+                                    <input type="text" value="${dayPlan.breakfast}" onchange="updateMeal('${day}', 'breakfast', this.value)" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-1.5 text-xs text-white focus:outline-none">
                                 </div>
                                 <div class="space-y-1">
-                                    <span class="text-[10px] text-slate-400 block font-medium">צהריים</span>
-                                    <input type="text" value="${dayPlan.lunch}" onchange="updateMeal('${day}', 'lunch', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-slate-100 focus:outline-none">
+                                    <span class="text-[10px] text-slate-300 font-semibold block">צהריים</span>
+                                    <input type="text" value="${dayPlan.lunch}" onchange="updateMeal('${day}', 'lunch', this.value)" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-1.5 text-xs text-white focus:outline-none">
                                 </div>
                                 <div class="space-y-1">
-                                    <span class="text-[10px] text-slate-400 block font-medium">ערב</span>
-                                    <input type="text" value="${dayPlan.dinner}" onchange="updateMeal('${day}', 'dinner', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-slate-100 focus:outline-none">
+                                    <span class="text-[10px] text-slate-300 font-semibold block">ערב</span>
+                                    <input type="text" value="${dayPlan.dinner}" onchange="updateMeal('${day}', 'dinner', this.value)" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-1.5 text-xs text-white focus:outline-none">
                                 </div>
                             </div>
                         </div>
@@ -835,17 +832,17 @@
             const container = document.getElementById('shoppingListContainer');
             if (!container) return;
             if (appData.shopping.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">רשימת הקניות ריקה לחלוטין</div>`;
+                container.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 font-medium">רשימת הקניות ריקה לחלוטין</div>`;
                 return;
             }
 
             container.innerHTML = appData.shopping.map(item => `
-                <div class="glass-card p-3 rounded-xl flex items-center justify-between border border-slate-800 shadow-sm ${item.checked ? 'opacity-50' : ''}">
+                <div class="glass-card p-3 rounded-xl flex items-center justify-between border border-slate-700 shadow-sm ${item.checked ? 'opacity-50' : ''}">
                     <div class="flex items-center gap-3">
                         <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleShoppingItem('${item.id}')" class="w-4 h-4 accent-sky-500 rounded cursor-pointer">
                         <div>
-                            <div class="text-xs font-bold ${item.checked ? 'line-through text-slate-500' : 'text-slate-100'}">${item.name}</div>
-                            <div class="text-[10px] text-slate-400">${item.quantity || ''}</div>
+                            <div class="text-xs font-bold ${item.checked ? 'line-through text-slate-400' : 'text-white'}">${item.name}</div>
+                            <div class="text-[10px] text-slate-300 font-medium">${item.quantity || ''}</div>
                         </div>
                     </div>
                     <button onclick="deleteShoppingItem('${item.id}')" class="text-slate-400 hover:text-rose-400 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
@@ -894,8 +891,8 @@
             if (famContainer) {
                 famContainer.innerHTML = appData.family.map(f => `
                     <div class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 flex items-center gap-2 text-xs">
-                        <span class="font-bold text-slate-200">${f.name}</span>
-                        <span class="text-[10px] text-emerald-400">(${f.role})</span>
+                        <span class="font-bold text-white">${f.name}</span>
+                        <span class="text-[10px] text-emerald-400 font-bold">(${f.role})</span>
                         <button onclick="deleteFamilyMember('${f.id}')" class="text-slate-400 hover:text-rose-400 mr-1"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 `).join('');
@@ -905,8 +902,8 @@
             if (fridgeS) {
                 fridgeS.innerHTML = appData.shelves.filter(s => s.type === 'fridge').map(s => `
                     <div class="flex items-center gap-2">
-                        <input type="text" value="${s.name}" onchange="updateShelfName('${s.id}', this.value)" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:outline-none">
-                        <button onclick="deleteShelf('${s.id}')" class="bg-slate-800 text-slate-400 hover:text-rose-400 px-3 py-1.5 rounded-xl border border-slate-700"><i class="fa-solid fa-trash text-xs"></i></button>
+                        <input type="text" value="${s.name}" onchange="updateShelfName('${s.id}', this.value)" class="flex-1 bg-slate-800 border border-slate-600 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none">
+                        <button onclick="deleteShelf('${s.id}')" class="bg-slate-800 text-slate-300 hover:text-rose-400 px-3 py-1.5 rounded-xl border border-slate-600"><i class="fa-solid fa-trash text-xs"></i></button>
                     </div>
                 `).join('');
             }
@@ -915,8 +912,8 @@
             if (freezerS) {
                 freezerS.innerHTML = appData.shelves.filter(s => s.type === 'freezer').map(s => `
                     <div class="flex items-center gap-2">
-                        <input type="text" value="${s.name}" onchange="updateShelfName('${s.id}', this.value)" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:outline-none">
-                        <button onclick="deleteShelf('${s.id}')" class="bg-slate-800 text-slate-400 hover:text-rose-400 px-3 py-1.5 rounded-xl border border-slate-700"><i class="fa-solid fa-trash text-xs"></i></button>
+                        <input type="text" value="${s.name}" onchange="updateShelfName('${s.id}', this.value)" class="flex-1 bg-slate-800 border border-slate-600 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none">
+                        <button onclick="deleteShelf('${s.id}')" class="bg-slate-800 text-slate-300 hover:text-rose-400 px-3 py-1.5 rounded-xl border border-slate-600"><i class="fa-solid fa-trash text-xs"></i></button>
                     </div>
                 `).join('');
             }
@@ -1006,8 +1003,8 @@
                 if (loadingEl) loadingEl.classList.add('hidden');
                 if (resultsEl) {
                     resultsEl.innerHTML = `
-                        <div class="bg-slate-800/90 p-4 rounded-2xl border border-amber-500/30 text-xs text-slate-200 leading-relaxed shadow-sm">
-                            <div class="font-bold text-amber-400 mb-1">המלצת שף מהירה מהמלאי שלך:</div>
+                        <div class="bg-slate-800 p-4 rounded-2xl border border-amber-500/40 text-xs text-white leading-relaxed shadow-sm">
+                            <div class="font-bold text-amber-400 mb-1 text-sm">המלצת שף מהירה מהמלאי שלך:</div>
                             • חביתת ירק עשירה (על בסיס ביצים, עגבניות וירקות זמינים)<br>
                             • טוסט משודרג עם גבינה צהובה ותבלינים<br>
                             • תבשיל חזה עוף מהיר במחבת עם ירקות
