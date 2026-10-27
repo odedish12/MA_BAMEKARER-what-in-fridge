@@ -161,6 +161,18 @@
 
         <!-- TAB 4: SETTINGS & MAPPING -->
         <section id="tab-settings" class="tab-content hidden space-y-4">
+            <!-- Google Sheets Sync Settings -->
+            <div class="glass-card p-4 rounded-2xl space-y-3 border border-sky-500/30 bg-sky-950/10">
+                <h2 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> הגדרת חיבור ל-Google Sheets
+                </h2>
+                <p class="text-xs text-slate-300">הדבק כאן את כתובת ה-Web App שקיבלת מ-Google Apps Script לסנכרון בין כל בני המשפחה:</p>
+                <div class="space-y-2">
+                    <input type="text" id="settingsGoogleUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-sky-500">
+                    <button onclick="saveGoogleUrlSettings()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs w-full transition">שמור כתובת סנכרון</button>
+                </div>
+            </div>
+
             <!-- Family Mapping -->
             <div class="glass-card p-4 rounded-2xl space-y-3">
                 <div class="flex justify-between items-center">
@@ -196,8 +208,8 @@
 
             <!-- App Info & Reset -->
             <div class="glass-card p-4 rounded-2xl space-y-2 text-center">
-                <div class="text-xs font-bold text-slate-300">אפליקציית מה במקרר גרסה 2.2</div>
-                <p class="text-[11px] text-slate-400">הנתונים נשמרים באופן אוטומטי במכשיר כך שכל בני המשפחה יכולים לעדכן מהנייד.</p>
+                <div class="text-xs font-bold text-slate-300">אפליקציית מה במקרר גרסה 2.3</div>
+                <p class="text-[11px] text-slate-400">סנכרון מלא באמצעות Google Sheets מעודכן לכל בני המשפחה.</p>
                 <button onclick="resetAllData()" class="text-xs text-rose-400 bg-rose-500/10 px-3 py-2 rounded-xl border border-rose-500/20 w-full mt-2">אפס את כל הנתונים</button>
             </div>
         </section>
@@ -403,6 +415,7 @@
         ];
 
         let appData = {
+            googleUrl: localStorage.getItem('ar_google_url') || '',
             shelves: JSON.parse(localStorage.getItem('ar_shelves')) || [...defaultFridgeShelves, ...defaultFreezerShelves],
             items: JSON.parse(localStorage.getItem('ar_items')) || defaultItems,
             family: JSON.parse(localStorage.getItem('ar_family')) || defaultFamily,
@@ -412,12 +425,56 @@
 
         let currentFilter = 'all';
 
+        function initApp() {
+            const urlInput = document.getElementById('settingsGoogleUrl');
+            if (urlInput) urlInput.value = appData.googleUrl;
+            syncFromCloud();
+            renderFridge();
+        }
+
         function saveData() {
             localStorage.setItem('ar_shelves', JSON.stringify(appData.shelves));
             localStorage.setItem('ar_items', JSON.stringify(appData.items));
             localStorage.setItem('ar_family', JSON.stringify(appData.family));
             localStorage.setItem('ar_meals', JSON.stringify(appData.meals));
             localStorage.setItem('ar_shopping', JSON.stringify(appData.shopping));
+            syncToCloud();
+        }
+
+        function saveGoogleUrlSettings() {
+            const url = document.getElementById('settingsGoogleUrl').value.trim();
+            appData.googleUrl = url;
+            localStorage.setItem('ar_google_url', url);
+            showToast('כתובת הסנכרון נשמרה בהצלחה!');
+            syncFromCloud();
+        }
+
+        async function syncToCloud() {
+            if (!appData.googleUrl) return;
+            try {
+                await fetch(appData.googleUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(appData.items)
+                });
+            } catch (e) {
+                console.error("Cloud sync error:", e);
+            }
+        }
+
+        async function syncFromCloud() {
+            if (!appData.googleUrl) return;
+            try {
+                const res = await fetch(appData.googleUrl);
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    appData.items = data;
+                    renderFridge();
+                }
+            } catch (e) {
+                console.error("Cloud fetch error:", e);
+            }
         }
 
         function getFutureDate(daysAhead) {
@@ -936,10 +993,8 @@
         }
 
         window.onload = function() {
-            renderFridge();
+            initApp();
         };
     </script>
 </body>
 </html>
-```
-eof
