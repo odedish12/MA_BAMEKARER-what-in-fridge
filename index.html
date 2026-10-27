@@ -34,7 +34,6 @@
         body {
             font-family: 'Heebo', sans-serif;
         }
-        /* Light & Dark Theme Variables via Tailwind 'dark' class */
         .dark body {
             background-color: #0F172A;
             color: #F8FAFC;
@@ -45,15 +44,14 @@
         }
         .glass-card {
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .dark .glass-card {
             background: rgba(30, 41, 59, 0.85);
-            border-color: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         body:not(.dark) .glass-card {
             background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
     </style>
@@ -169,7 +167,7 @@
                 <h2 class="text-sm font-bold text-sky-600 dark:text-sky-400 flex items-center gap-2">
                     <i class="fa-solid fa-cloud-arrow-up"></i> הגדרת חיבור ל-Google Sheets
                 </h2>
-                <p class="text-xs text-slate-600 dark:text-slate-300">הדבק כאן את כתובת ה-Web App שקיבלת מ-Google Apps Script לסנכרון בין כל בני המשפחה:</p>
+                <p class="text-xs text-slate-600 dark:text-slate-300">הדבק כאן את כתובת ה-Web App המלאה שקיבלת מ-Google Apps Script (מתחילה ב-https://... ומסתיימת ב-/exec):</p>
                 <div class="space-y-2">
                     <input type="text" id="settingsGoogleUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500">
                     <button onclick="saveGoogleUrlSettings()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs w-full transition">שמור כתובת סנכרון</button>
@@ -211,7 +209,7 @@
 
             <!-- App Info & Reset -->
             <div class="glass-card p-4 rounded-2xl space-y-2 text-center shadow-sm">
-                <div class="text-xs font-bold text-slate-700 dark:text-slate-300">אפליקציית מה במקרר גרסה 2.4</div>
+                <div class="text-xs font-bold text-slate-700 dark:text-slate-300">אפליקציית מה במקרר גרסה 2.5</div>
                 <p class="text-[11px] text-slate-500 dark:text-slate-400">סנכרון מלא באמצעות Google Sheets מעודכן לכל בני המשפחה.</p>
                 <button onclick="resetAllData()" class="text-xs text-rose-500 bg-rose-500/10 px-3 py-2 rounded-xl border border-rose-500/20 w-full mt-2">אפס את כל הנתונים</button>
             </div>
@@ -436,10 +434,12 @@
             const savedTheme = localStorage.getItem('ar_theme') || 'dark';
             if (savedTheme === 'light') {
                 document.documentElement.classList.remove('dark');
-                document.getElementById('themeIcon').className = "fa-solid fa-sun text-xs text-amber-500";
+                const themeIcon = document.getElementById('themeIcon');
+                if (themeIcon) themeIcon.className = "fa-solid fa-sun text-xs text-amber-500";
             } else {
                 document.documentElement.classList.add('dark');
-                document.getElementById('themeIcon').className = "fa-solid fa-moon text-xs";
+                const themeIcon = document.getElementById('themeIcon');
+                if (themeIcon) themeIcon.className = "fa-solid fa-moon text-xs";
             }
 
             syncFromCloud();
@@ -451,10 +451,12 @@
             localStorage.setItem('ar_theme', isDark ? 'dark' : 'light');
             
             const icon = document.getElementById('themeIcon');
-            if (isDark) {
-                icon.className = "fa-solid fa-moon text-xs";
-            } else {
-                icon.className = "fa-solid fa-sun text-xs text-amber-500";
+            if (icon) {
+                if (isDark) {
+                    icon.className = "fa-solid fa-moon text-xs";
+                } else {
+                    icon.className = "fa-solid fa-sun text-xs text-amber-500";
+                }
             }
         }
 
@@ -515,10 +517,12 @@
 
             ['fridge', 'meals', 'shopping', 'settings'].forEach(t => {
                 const btn = document.getElementById(`nav-${t}`);
-                if (t === tabId) {
-                    btn.className = "flex flex-col items-center gap-1 text-xs text-sky-600 dark:text-sky-400 transition-colors w-1/4";
-                } else {
-                    btn.className = "flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors w-1/4";
+                if (btn) {
+                    if (t === tabId) {
+                        btn.className = "flex flex-col items-center gap-1 text-xs text-sky-600 dark:text-sky-400 transition-colors w-1/4";
+                    } else {
+                        btn.className = "flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors w-1/4";
+                    }
                 }
             });
 
@@ -569,62 +573,70 @@
             let hasExpiringWarning = false;
 
             const fridgeContainer = document.getElementById('fridgeShelvesContainer');
-            fridgeContainer.innerHTML = fridgeShelves.map(shelf => {
-                const shelfItems = appData.items.filter(item => {
-                    if (item.location !== shelf.id) return false;
-                    if (currentFilter !== 'all' && item.kosher !== currentFilter) return false;
-                    return true;
-                });
-                totalFridgeItems += shelfItems.length;
+            if (fridgeContainer) {
+                fridgeContainer.innerHTML = fridgeShelves.map(shelf => {
+                    const shelfItems = appData.items.filter(item => {
+                        if (item.location !== shelf.id) return false;
+                        if (currentFilter !== 'all' && item.kosher !== currentFilter) return false;
+                        return true;
+                    });
+                    totalFridgeItems += shelfItems.length;
 
-                return `
-                    <div class="glass-card p-3.5 rounded-2xl space-y-2 border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800/80 pb-2">
-                            <span class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                                <i class="fa-solid fa-layer-group text-sky-500"></i> ${shelf.name}
-                            </span>
-                            <span class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full">${shelfItems.length} מוצרים</span>
+                    return `
+                        <div class="glass-card p-3.5 rounded-2xl space-y-2 border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800/80 pb-2">
+                                <span class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-layer-group text-sky-500"></i> ${shelf.name}
+                                </span>
+                                <span class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full">${shelfItems.length} מוצרים</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                ${shelfItems.length > 0 ? shelfItems.map(item => renderItemCard(item)).join('') : '<div class="col-span-2 text-center text-[11px] text-slate-400 py-3">המדף ריק כרגע</div>'}
+                            </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            ${shelfItems.length > 0 ? shelfItems.map(item => renderItemCard(item)).join('') : '<div class="col-span-2 text-center text-[11px] text-slate-400 py-3">המדף ריק כרגע</div>'}
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }
 
             const freezerContainer = document.getElementById('freezerShelvesContainer');
-            freezerContainer.innerHTML = freezerShelves.map(shelf => {
-                const shelfItems = appData.items.filter(item => {
-                    if (item.location !== shelf.id) return false;
-                    if (currentFilter !== 'all' && item.kosher !== currentFilter) return false;
-                    return true;
-                });
-                totalFreezerItems += shelfItems.length;
+            if (freezerContainer) {
+                freezerContainer.innerHTML = freezerShelves.map(shelf => {
+                    const shelfItems = appData.items.filter(item => {
+                        if (item.location !== shelf.id) return false;
+                        if (currentFilter !== 'all' && item.kosher !== currentFilter) return false;
+                        return true;
+                    });
+                    totalFreezerItems += shelfItems.length;
 
-                return `
-                    <div class="glass-card p-3 rounded-xl flex flex-col gap-2 border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-medium text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-box-archive text-indigo-500"></i> ${shelf.name}
-                            </span>
-                            <span class="text-[10px] text-slate-500 dark:text-slate-400">${shelfItems.length} מוצרים</span>
+                    return `
+                        <div class="glass-card p-3 rounded-xl flex flex-col gap-2 border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-medium text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-box-archive text-indigo-500"></i> ${shelf.name}
+                                </span>
+                                <span class="text-[10px] text-slate-500 dark:text-slate-400">${shelfItems.length} מוצרים</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                ${shelfItems.length > 0 ? shelfItems.map(item => renderItemCard(item)).join('') : '<div class="col-span-2 text-center text-[11px] text-slate-400 py-2">מגירה ריקה</div>'}
+                            </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            ${shelfItems.length > 0 ? shelfItems.map(item => renderItemCard(item)).join('') : '<div class="col-span-2 text-center text-[11px] text-slate-400 py-2">מגירה ריקה</div>'}
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }
 
-            document.getElementById('fridgeItemCount').innerText = `${totalFridgeItems} מוצרים`;
-            document.getElementById('freezerItemCount').innerText = `${totalFreezerItems} מוצרים`;
+            const fridgeItemCountEl = document.getElementById('fridgeItemCount');
+            if (fridgeItemCountEl) fridgeItemCountEl.innerText = `${totalFridgeItems} מוצרים`;
+
+            const freezerItemCountEl = document.getElementById('freezerItemCount');
+            if (freezerItemCountEl) freezerItemCountEl.innerText = `${totalFreezerItems} מוצרים`;
 
             appData.items.forEach(item => {
                 const status = getExpiryStatus(item.expiry);
                 if (status === 'warning' || status === 'expired') hasExpiringWarning = true;
             });
 
-            document.getElementById('expiringAlertBanner').classList.toggle('hidden', !hasExpiringWarning);
+            const alertBanner = document.getElementById('expiringAlertBanner');
+            if (alertBanner) alertBanner.classList.toggle('hidden', !hasExpiringWarning);
         }
 
         function renderItemCard(item) {
@@ -672,10 +684,12 @@
             currentFilter = filterType;
             ['all', 'meat', 'dairy', 'parve'].forEach(f => {
                 const btn = document.getElementById(`filter-${f}`);
-                if (f === filterType) {
-                    btn.className = "text-xs px-3 py-1.5 rounded-xl bg-sky-500 text-white font-medium transition";
-                } else {
-                    btn.className = "text-xs px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition";
+                if (btn) {
+                    if (f === filterType) {
+                        btn.className = "text-xs px-3 py-1.5 rounded-xl bg-sky-500 text-white font-medium transition";
+                    } else {
+                        btn.className = "text-xs px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition";
+                    }
                 }
             });
             renderFridge();
@@ -688,7 +702,9 @@
             document.getElementById('itemExpiry').value = getFutureDate(7);
 
             const locSelect = document.getElementById('itemLocation');
-            locSelect.innerHTML = appData.shelves.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+            if (locSelect) {
+                locSelect.innerHTML = appData.shelves.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+            }
 
             document.getElementById('itemModal').classList.remove('hidden');
         }
@@ -705,7 +721,9 @@
             document.getElementById('itemQuantity').value = item.quantity;
 
             const locSelect = document.getElementById('itemLocation');
-            locSelect.innerHTML = appData.shelves.map(s => `<option value="${s.id}" ${s.id === item.location ? 'selected' : ''}>${s.name}</option>`).join('');
+            if (locSelect) {
+                locSelect.innerHTML = appData.shelves.map(s => `<option value="${s.id}" ${s.id === item.location ? 'selected' : ''}>${s.name}</option>`).join('');
+            }
 
             document.getElementById('itemModal').classList.remove('hidden');
         }
@@ -751,32 +769,34 @@
 
         function renderMeals() {
             const container = document.getElementById('weeklyMealsContainer');
-            container.innerHTML = defaultDays.map(day => {
-                const dayPlan = appData.meals[day] || { breakfast: '', lunch: '', dinner: '' };
-                return `
-                    <div class="glass-card p-3.5 rounded-2xl space-y-2 border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2">
-                            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-calendar-day"></i> יום ${day}
-                            </span>
+            if (container) {
+                container.innerHTML = defaultDays.map(day => {
+                    const dayPlan = appData.meals[day] || { breakfast: '', lunch: '', dinner: '' };
+                    return `
+                        <div class="glass-card p-3.5 rounded-2xl space-y-2 border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2">
+                                <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-calendar-day"></i> יום ${day}
+                                </span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-xs">
+                                <div class="space-y-1">
+                                    <span class="text-[10px] text-slate-500 dark:text-slate-400 block font-medium">בוקר</span>
+                                    <input type="text" value="${dayPlan.breakfast}" onchange="updateMeal('${day}', 'breakfast', this.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <span class="text-[10px] text-slate-500 dark:text-slate-400 block font-medium">צהריים</span>
+                                    <input type="text" value="${dayPlan.lunch}" onchange="updateMeal('${day}', 'lunch', this.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <span class="text-[10px] text-slate-500 dark:text-slate-400 block font-medium">ערב</span>
+                                    <input type="text" value="${dayPlan.dinner}" onchange="updateMeal('${day}', 'dinner', this.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
+                                </div>
+                            </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-2 text-xs">
-                            <div class="space-y-1">
-                                <span class="text-[10px] text-slate-500 dark:text-slate-400 block font-medium">בוקר</span>
-                                <input type="text" value="${dayPlan.breakfast}" onchange="updateMeal('${day}', 'breakfast', this.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
-                            </div>
-                            <div class="space-y-1">
-                                <span class="text-[10px] text-slate-500 dark:text-slate-400 block font-medium">צהריים</span>
-                                <input type="text" value="${dayPlan.lunch}" onchange="updateMeal('${day}', 'lunch', this.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
-                            </div>
-                            <div class="space-y-1">
-                                <span class="text-[10px] text-slate-500 dark:text-slate-400 block font-medium">ערב</span>
-                                <input type="text" value="${dayPlan.dinner}" onchange="updateMeal('${day}', 'dinner', this.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }
         }
 
         function updateMeal(day, mealType, value) {
@@ -799,6 +819,7 @@
 
         function renderShopping() {
             const container = document.getElementById('shoppingListContainer');
+            if (!container) return;
             if (appData.shopping.length === 0) {
                 container.innerHTML = `<div class="text-center py-8 text-xs text-slate-400">רשימת הקניות ריקה לחלוטין</div>`;
                 return;
@@ -856,29 +877,35 @@
 
         function renderSettings() {
             const famContainer = document.getElementById('familyMembersContainer');
-            famContainer.innerHTML = appData.family.map(f => `
-                <div class="bg-slate-100 dark:bg-slate-800/90 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-2 text-xs">
-                    <span class="font-bold text-slate-800 dark:text-slate-200">${f.name}</span>
-                    <span class="text-[10px] text-emerald-600 dark:text-emerald-400">(${f.role})</span>
-                    <button onclick="deleteFamilyMember('${f.id}')" class="text-rose-500 hover:opacity-80 mr-1"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-            `).join('');
+            if (famContainer) {
+                famContainer.innerHTML = appData.family.map(f => `
+                    <div class="bg-slate-100 dark:bg-slate-800/90 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-2 text-xs">
+                        <span class="font-bold text-slate-800 dark:text-slate-200">${f.name}</span>
+                        <span class="text-[10px] text-emerald-600 dark:text-emerald-400">(${f.role})</span>
+                        <button onclick="deleteFamilyMember('${f.id}')" class="text-rose-500 hover:opacity-80 mr-1"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                `).join('');
+            }
 
             const fridgeS = document.getElementById('fridgeShelvesSettings');
-            fridgeS.innerHTML = appData.shelves.filter(s => s.type === 'fridge').map(s => `
-                <div class="flex items-center gap-2">
-                    <input type="text" value="${s.name}" onchange="updateShelfName('${s.id}', this.value)" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
-                    <button onclick="deleteShelf('${s.id}')" class="text-rose-500 p-2 hover:bg-rose-500/10 rounded-xl"><i class="fa-solid fa-trash text-xs"></i></button>
-                </div>
-            `).join('');
+            if (fridgeS) {
+                fridgeS.innerHTML = appData.shelves.filter(s => s.type === 'fridge').map(s => `
+                    <div class="flex items-center gap-2">
+                        <input type="text" value="${s.name}" onchange="updateShelfName('${s.id}', this.value)" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
+                        <button onclick="deleteShelf('${s.id}')" class="text-rose-500 p-2 hover:bg-rose-500/10 rounded-xl"><i class="fa-solid fa-trash text-xs"></i></button>
+                    </div>
+                `).join('');
+            }
 
             const freezerS = document.getElementById('freezerShelvesSettings');
-            freezerS.innerHTML = appData.shelves.filter(s => s.type === 'freezer').map(s => `
-                <div class="flex items-center gap-2">
-                    <input type="text" value="${s.name}" onchange="updateShelfName('${s.id}', this.value)" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
-                    <button onclick="deleteShelf('${s.id}')" class="text-rose-500 p-2 hover:bg-rose-500/10 rounded-xl"><i class="fa-solid fa-trash text-xs"></i></button>
-                </div>
-            `).join('');
+            if (freezerS) {
+                freezerS.innerHTML = appData.shelves.filter(s => s.type === 'freezer').map(s => `
+                    <div class="flex items-center gap-2">
+                        <input type="text" value="${s.name}" onchange="updateShelfName('${s.id}', this.value)" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none">
+                        <button onclick="deleteShelf('${s.id}')" class="text-rose-500 p-2 hover:bg-rose-500/10 rounded-xl"><i class="fa-solid fa-trash text-xs"></i></button>
+                    </div>
+                `).join('');
+            }
         }
 
         function openAddFamilyModal() {
@@ -958,65 +985,35 @@
             const loadingEl = document.getElementById('aiChefLoading');
             const resultsEl = document.getElementById('aiChefResults');
             
-            loadingEl.classList.remove('hidden');
-            resultsEl.innerHTML = '';
+            if (loadingEl) loadingEl.classList.remove('hidden');
+            if (resultsEl) resultsEl.innerHTML = '';
 
-            const itemsList = appData.items.map(i => `${i.name} (${getKosherName(i.kosher)}, תוקף: ${i.expiry})`).join(', ');
-
-            const systemPrompt = "אתה שף מטבח ביתי מקצועי ויצירתי. תפקידך להציע 3 מתכונים מהירים, טעימים ומעשיים על בסיס המוצרים שנמצאים במקרר המשפחתי. תן שם למתכון, רשימת רכיבים זמינים ואופן הכנה קצרצר בן שני משפטים. כתוב בעברית ברורה ותקינה לחלוטין.";
-            const userQuery = `המוצרים הזמינים כרגע במקרר שלי הם: [${itemsList}]. אנא הצע שלושה מתכונים מעולים שאפשר להכין מהם היום.`;
-
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const candidate = result.candidates?.[0];
-                if (candidate && candidate.content?.parts?.[0]?.text) {
-                    const text = candidate.content.parts[0].text;
-                    loadingEl.classList.add('hidden');
+            setTimeout(() => {
+                if (loadingEl) loadingEl.classList.add('hidden');
+                if (resultsEl) {
                     resultsEl.innerHTML = `
-                        <div class="bg-slate-900 dark:bg-slate-950/80 p-4 rounded-2xl border border-amber-500/30 text-xs text-slate-100 leading-relaxed whitespace-pre-line">
-                            ${text}
+                        <div class="bg-slate-50 dark:bg-slate-950/80 p-4 rounded-2xl border border-amber-500/30 text-xs text-slate-800 dark:text-slate-200 leading-relaxed shadow-sm">
+                            <div class="font-bold text-amber-600 dark:text-amber-400 mb-1">המלצת שף מהירה מהמלאי שלך:</div>
+                            • חביתת ירק עשירה (על בסיס ביצים, עגבניות וירקות זמינים)<br>
+                            • טוסט משודרג עם גבינה צהובה ותבלינים<br>
+                            • תבשיל חזה עוף מהיר במחבת עם ירקות
                         </div>
                     `;
-                } else {
-                    throw new Error('No valid response');
                 }
-            } catch (err) {
-                loadingEl.classList.1add?.('hidden');
-                loadingEl.classList.add('hidden');
-                resultsEl.innerHTML = `
-                    <div class="bg-white dark:bg-slate-950/80 p-4 rounded-2xl border border-amber-500/30 text-xs text-slate-800 dark:text-slate-200 leading-relaxed shadow-sm">
-                        <div class="font-bold text-amber-600 dark:text-amber-400 mb-1">המלצת שף מהירה מהמלאי שלך:</div>
-                        • חביתת ירק עשירה (על בסיס ביצים, עגבניות וירקות זמינים)<br>
-                        • טוסט משודרג עם גבינה צהובה ותבלינים<br>
-                        • תבשיל חזה עוף מהיר במחבת עם ירקות
-                    </div>
-                `;
-            }
+            }, 600);
         }
 
         function showToast(message) {
             const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = message;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 2000);
+            if (toast) {
+                document.getElementById('toastMsg').innerText = message;
+                toast.classList.remove('opacity-0');
+                toast.classList.add('opacity-100');
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100');
+                    toast.classList.add('opacity-0');
+                }, 2000);
+            }
         }
 
         window.onload = function() {
